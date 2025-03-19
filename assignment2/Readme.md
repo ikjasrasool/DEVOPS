@@ -1,29 +1,32 @@
-![Screenshot (335)](https://github.com/user-attachments/assets/e438ecae-ec5a-476b-a6ca-9eaa24b25fee)
+# Jenkins Pipeline for Docker Build and Push
 
-create task 2 and click build now
-![Screenshot (332)](https://github.com/user-attachments/assets/9f2042b2-e1c9-4251-989c-4b2f29a859b4)
+## **Task 2: Create and Build Now**
 
-console output
-![Screenshot (333)](https://github.com/user-attachments/assets/35f3e6df-67f8-4540-90d0-a265efb5423e)
+### **1. Create Task 2 in Jenkins and Click Build Now**
+![Create Task 2](https://github.com/user-attachments/assets/e438ecae-ec5a-476b-a6ca-9eaa24b25fee)
 
-docker repository
-![Screenshot (330)](https://github.com/user-attachments/assets/6fb6a51b-74d2-4ead-b741-d376dcdac8e3)
+### **2. Console Output After Running Build**
+![Console Output](https://github.com/user-attachments/assets/35f3e6df-67f8-4540-90d0-a265efb5423e)
 
-commends
-![Screenshot (334)](https://github.com/user-attachments/assets/57037e2c-cc21-4803-9916-65b63cc7c593)
+### **3. Docker Repository After Push**
+![Docker Repository](https://github.com/user-attachments/assets/6fb6a51b-74d2-4ead-b741-d376dcdac8e3)
 
-**script file**
+### **4. Commands Used**
+![Commands](https://github.com/user-attachments/assets/57037e2c-cc21-4803-9916-65b63cc7c593)
 
+---
 
-pipeline { 
-    agent any 
+## **Jenkins Pipeline Script**
+
+```groovy
+pipeline {
+    agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-token')
-        APP_NAME = "ikjas/ikjas" 
+        APP_NAME = "ikjas/ikjas"
     }
 
-    stages { 
+    stages {
         stage('SCM Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/lily4499/lil-node-app.git'
@@ -32,13 +35,15 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {  
-                sh 'docker build -t $APP_NAME:$BUILD_NUMBER .' // Fixed missing '-' in '-t'
+                sh 'docker build -t $APP_NAME:$BUILD_NUMBER .'
             }
         }
         
         stage('Login to DockerHub') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                withCredentials([usernamePassword(credentialsId: 'docker-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                }
             }
         }
         
@@ -49,3 +54,39 @@ pipeline {
         }
     }
 }
+```
+
+---
+
+## **Instructions to Set Up Jenkins and Run the Pipeline**
+
+### **1. Add Docker Credentials in Jenkins**
+- Go to **Jenkins Dashboard → Manage Jenkins → Manage Credentials**.
+- Add a new credential with:
+  - **ID:** `docker-token`
+  - **Username:** Your DockerHub username
+  - **Password:** Your DockerHub password
+
+### **2. Run the Pipeline**
+1. Open Jenkins, navigate to **Task 2**.
+2. Click **Build Now**.
+3. Check the **Console Output** to verify the steps.
+4. Once complete, check the **DockerHub repository** to confirm the image was pushed.
+
+### **3. Verify Docker Image on Local Machine**
+```sh
+docker pull ikjas/ikjas:<BUILD_NUMBER>
+docker images
+docker run -d -p 8080:8080 ikjas/ikjas:<BUILD_NUMBER>
+```
+
+### **4. Troubleshooting**
+- If DockerHub login fails, check if credentials are correct in **Jenkins Credentials Store**.
+- If Docker build fails, ensure Docker is running and you have correct **Dockerfile**.
+- If push fails, check network connectivity and repository permissions.
+
+---
+
+### **Outcome:**
+After executing this pipeline, your **Docker image** will be built, tagged, and pushed to **DockerHub**, making it accessible for deployment anywhere! 🚀
+
