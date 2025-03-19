@@ -11,3 +11,39 @@ docker repository
 
 commends
 ![Screenshot (334)](https://github.com/user-attachments/assets/57037e2c-cc21-4803-9916-65b63cc7c593)
+
+**script file**
+pipeline { 
+    agent any 
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker-token')
+        APP_NAME = "ikjas/ikjas" 
+    }
+
+    stages { 
+        stage('SCM Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/lily4499/lil-node-app.git'
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {  
+                sh 'docker build -t $APP_NAME:$BUILD_NUMBER .' // Fixed missing '-' in '-t'
+            }
+        }
+        
+        stage('Login to DockerHub') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        
+        stage('Push Image') {
+            steps {
+                sh 'docker push $APP_NAME:$BUILD_NUMBER'
+            }
+        }
+    }
+}
