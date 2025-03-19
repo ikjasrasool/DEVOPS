@@ -55,38 +55,3 @@ pipeline {
     }
 }
 ```
-
----
-
-## **Instructions to Set Up Jenkins and Run the Pipeline**
-
-### **1. Add Docker Credentials in Jenkins**
-- Go to **Jenkins Dashboard → Manage Jenkins → Manage Credentials**.
-- Add a new credential with:
-  - **ID:** `docker-token`
-  - **Username:** Your DockerHub username
-  - **Password:** Your DockerHub password
-
-### **2. Run the Pipeline**
-1. Open Jenkins, navigate to **Task 2**.
-2. Click **Build Now**.
-3. Check the **Console Output** to verify the steps.
-4. Once complete, check the **DockerHub repository** to confirm the image was pushed.
-
-### **3. Verify Docker Image on Local Machine**
-```sh
-docker pull ikjas/ikjas:<BUILD_NUMBER>
-docker images
-docker run -d -p 8080:8080 ikjas/ikjas:<BUILD_NUMBER>
-```
-
-### **4. Troubleshooting**
-- If DockerHub login fails, check if credentials are correct in **Jenkins Credentials Store**.
-- If Docker build fails, ensure Docker is running and you have correct **Dockerfile**.
-- If push fails, check network connectivity and repository permissions.
-
----
-
-### **Outcome:**
-After executing this pipeline, your **Docker image** will be built, tagged, and pushed to **DockerHub**, making it accessible for deployment anywhere! 🚀
-
