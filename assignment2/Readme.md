@@ -13,6 +13,8 @@ commends
 ![Screenshot (334)](https://github.com/user-attachments/assets/57037e2c-cc21-4803-9916-65b63cc7c593)
 
 **script file**
+
+
 pipeline { 
     agent any 
 
