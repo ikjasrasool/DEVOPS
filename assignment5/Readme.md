@@ -54,9 +54,8 @@ pipeline {
 ```
 
 ##Minikube stepup
-![Screenshot (366)](https://github.com/user-attachments/assets/be2618fc-6205-4eca-99c9-9135cc48dfc0)
+![Screenshot (366)](https://github.com/user-attachments/assets/9419152a-3cad-4833-be6a-722a7fcbb7d9)
 
 ##tomcat deploy
-![Screenshot (365)](https://github.com/user-attachments/assets/728e8398-356a-4d10-bdd0-7c6bd6a9400a)
-
+![Screenshot (365)](https://github.com/user-attachments/assets/4534af74-bfec-4185-8c10-410eb42b4fef)
 
